@@ -1,99 +1,56 @@
 {% load static %}
-<link  href="{% static 'css/highcharts.css' %}">
+<!DOCTYPE html>
+<html>
+<body>
+<head>
+    <link  rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.6/dist/semantic.min.css">
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
 
-<script src="{% static 'js/test.js' %}"></script>
-<script src="{% static 'js/highcharts/highcharts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+
+</head>
+<div class="ui fixed inverted menu">
+    <div class="ui container">
+        <a href="#" class="header item">
+            Projet Immo
+        </a>
+        <a href="#" class="active item">Accueil</a>
+
+    </div>
+</div>
+
+<div class="ui main text container" style="margin-top: 100px;">
+
+    <div class="grid">
+        <a href="france" class="item">
+            <img src="{% static 'image/france.png' %}">
+            <h3 class="ui header">France entière</h3>
+        </a>
+        <a href="searchdep" class="item">
+            <img src="{% static 'image/paris-75.png' %}">
+            <h3 class="ui header">Rechercher un département</h3>
+        </a>
+        <a href="searchcommune" class="item">
+            <img style="max-width: 100px;fill:white" src="{% static 'image/map-marked-solid.svg' %}">
+            <h3 class="ui header">Rechercher une commune</h3>
+        </a>
+        <a href="about" class="item">
+            <img style="max-width: 100px;fill:white" src="{% static 'image/question-circle-regular.svg' %}">
+            <h3 class="ui header">A propos</h3>
+        </a>
+
+    </div>
+</div>
 
 
-
-
-<h1>Graphique Projet immo</h1>
-{{ test }}
-
-
-
-<div id="container"></div>
-<div id="container-2"></div>
 
 <script>
-    Highcharts.chart('container', {
-        title: {
-            text: 'Logarithmic axis demo'
-        },
 
-        xAxis: {
-            tickInterval: 1,
-            type: 'logarithmic',
-            accessibility: {
-                rangeDescription: 'Range: 1 to 10'
-            }
-        },
-
-        yAxis: {
-            type: 'logarithmic',
-            minorTickInterval: 0.1,
-            accessibility: {
-                rangeDescription: 'Range: 0.1 to 1000'
-            }
-        },
-
-        tooltip: {
-            headerFormat: '<b>{series.name}</b><br />',
-            pointFormat: 'x = {point.x}, y = {point.y}'
-        },
-
-        series: [{
-            data: [],
-    pointStart: 1
-    }]
-    });
-
-
-    Highcharts.chart('container-2', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Valeurs foncieres moyenne des ventes par departement '
-        },
-        accessibility: {
-            announceNewData: {
-                enabled: true
-            }
-        },
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {
-            title: {
-                text: 'Total percent market share'
-            }
-
-        },
-        legend: {
-            enabled: false
-        },
-        plotOptions: {
-            series: {
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.y:.1f}'
-                }
-            }
-        },
-
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span>{point.name}</span>: <b>{point.y:.2f}</b> <br/>'
-        },
-
-        series: [
-            {
-                name: "Departement",
-                colorByPoint: true,
-                data: {{ valeurfoncierepardep|safe }}
-            }
-        ]
-    });
 </script>
+
+
+
