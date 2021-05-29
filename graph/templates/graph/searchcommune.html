@@ -58702,6 +58702,7 @@
             minCharacters: 3,
             on: 'click',
             onChange: function(value, text, $selectedItem) {
+                value = value.replace(" ", "_");
                 window.location.href = "commune/"+value;
             }
         })

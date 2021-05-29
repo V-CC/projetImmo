@@ -25,6 +25,7 @@ import plotly.graph_objs as go
 # import plotly.figure_factory as ff
 from plotly.subplots import make_subplots
 
+from common.utils.graphtohtml import DataToGraphUtils
 
 
 def index(request):
@@ -37,8 +38,13 @@ def france(request):
     fig = px.bar(moyennevfpardep, x='Code departement', y='Valeur fonciere', height=600, width=700,
              title='Moyenne de la valeur foncière des ventes par département')
     graph = fig.to_html
+
+    moyennesurface =  df.groupby(['Code departement'])['Surface reelle bati'].mean().reset_index()
+    fig2 = px.bar(moyennesurface, x='Code departement', y='Surface reelle bati', height=600, width=700,
+                 title='Moyenne de la Surface reelle bati des ventes par département')
+    graph2 = fig2.to_html();
     # On prépare les variables que l'on va passer à la vue
-    context = {'figure1': graph }
+    context = {'figure1': graph,'figure2':graph2 }
     return render(request, 'graph/france.html', context)
 
 def searchdep(request):
@@ -58,25 +64,28 @@ def departement(request,dep_id):
     vente['Date mutation'] = pd.to_datetime(vente['Date mutation'])
     vente.sort_values(by=['Date mutation'], inplace=True, ascending=False)
     vente.head()
-    figure1 = px.line(vente, x="Date mutation", y="Nombre de vente", width=700)
-    figure1.update_layout(title='Nombre de vente par jour ', xaxis_title="", yaxis_title="")
-    figure1 = figure1.to_html
+    figure1 = DataToGraphUtils.plot_daywise(vente,'Nombre de vente')
     context = {'codedep':dep_id,'figure1':figure1}
     return render(request, 'graph/departement.html', context)
 
 def commune(request,commune):
+    commune = commune.replace('_',' ')
     df = pd.read_csv("valeursfoncieres-2020.txt",sep='|', decimal=',', converters={'Code departement': lambda x: str(x)})
-    df.head()
     df = df.loc[df['Commune'] == commune]
+    df.head()
     vente = df
     vente['Nombre de vente'] = vente.groupby('Date mutation')['Commune'].transform('count')
     vente['Date mutation'] = pd.to_datetime(vente['Date mutation'])
     vente.sort_values(by=['Date mutation'], inplace=True, ascending=False)
     vente.head()
-    figure1 = px.line(vente, x="Date mutation", y="Nombre de vente", width=700)
-    figure1.update_layout(title='Nombre de vente par jour ', xaxis_title="", yaxis_title="")
-    figure1 = figure1.to_html
-    context = {'commune':commune,'figure1':figure1}
+    figure1 = DataToGraphUtils.plot_daywise(vente,'Nombre de vente')
+    df['vente'] = 1
+    filtered_df = df[df['Type local'].notnull()]
+    figure2 = px.pie(filtered_df, values='vente', names='Type local', title='repartition nombre de ventes')
+    figure2 = figure2.to_html()
+    figure3 = px.pie(filtered_df, values='Valeur fonciere', names='Type local', title='repartition valeurs foncière')
+    figure3 = figure3.to_html()
+    context = {'commune':commune,'figure1':figure1,'figure2':figure2,'figure3':figure3}
     return render(request, 'graph/commune.html', context)
 
 def about(request):
